@@ -6,23 +6,32 @@ import BlogLike from "../../components/likes/BlogLike";
 import posts from "../../data/posts.json";
 import "./styles.css";
 const Blog = (props) => {
-  const [blog, setBlog] = useState({});
+  const [blog, setBlog] = useState(null);
   const [loading, setLoading] = useState(true);
+
   const params = useParams();
   const navigate = useNavigate();
-  useEffect(() => {
-    const { id } = params;
-    const blog = posts.find((post) => post._id.toString() === id);
 
-    if (blog) {
-      setBlog(blog);
-      setLoading(false);
-    } else {
-      navigate("/404");
+  const fetchBlogs = async () => {
+    try {
+      let response = await fetch(`http://localhost:3001/authors/${params.id}`);
+      if (response.ok) {
+        let data = await response.json();
+        setBlog(data);
+        setLoading(false);
+      } else {
+        console.log("error");
+      }
+    } catch (error) {
+      console.log(error);
     }
+  };
+
+  useEffect(() => {
+    fetchBlogs();
   }, []);
 
-  if (loading) {
+  if (loading && !blog) {
     return <div>loading</div>;
   } else {
     return (
