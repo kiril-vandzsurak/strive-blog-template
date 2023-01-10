@@ -16,6 +16,7 @@ const Blog = (props) => {
     try {
       let response = await fetch(`http://localhost:3001/authors/${params.id}`);
       if (response.ok) {
+        console.log("heeeeey", params.id);
         let data = await response.json();
         setBlog(data);
         setLoading(false);
